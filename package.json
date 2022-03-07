@@ -1,5 +1,5 @@
 {
-  "name": "auth_template",
+  "name": "school-api",
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
@@ -7,13 +7,13 @@
     "dev": "nodemon server"
   },
   "author": "infamous55",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "nodemon": "^2.0.15",
-    "prisma": "^3.9.2"
+    "prisma": "^3.10.0"
   },
   "dependencies": {
-    "@prisma/client": "^3.9.2",
+    "@prisma/client": "^3.10.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.1",
     "dotenv": "^16.0.0",

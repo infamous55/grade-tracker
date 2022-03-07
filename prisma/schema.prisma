@@ -16,10 +16,67 @@ model User {
   name            String
   role            Role     @default(STUDENT)
   tokenIdentifier String?
+  class           Class?    @relation(fields: [classId], references: [id])
+  classId         Int?
+  student         Grade[]  @relation("student")
+  teacher         Grade[]  @relation("teacher")
 }
 
 enum Role {
   STUDENT
   TEACHER
   ADMIN
+}
+
+model Discipline {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String
+  grades    Grade[]
+}
+
+model Year {
+  id        Int        @id @default(autoincrement())
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  startDate DateTime
+  endDate   DateTime
+  semesters Semester[]
+  classes   Class[]
+}
+
+model Semester {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  year      Year     @relation(fields: [yearId], references: [id])
+  yearId    Int
+  grades    Grade[]
+}
+
+model Grade {
+  id           Int        @id @default(autoincrement())
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  student      User       @relation("student", fields: [studentId], references: [id])
+  studentId    Int
+  teacher      User       @relation("teacher", fields: [teacherId], references: [id])
+  teacherId    Int
+  semester     Semester   @relation(fields: [semesterId], references: [id])
+  semesterId   Int
+  discipline   Discipline @relation(fields: [disciplineId], references: [id])
+  disciplineId Int
+  value        Float
+}
+
+model Class {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  number    Int
+  letter    String
+  year      Year     @relation(fields: [yearId], references: [id])
+  yearId    Int
+  students  User[]
 }

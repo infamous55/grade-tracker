@@ -1,5 +1,4 @@
 const { PrismaClient } = require('@prisma/client');
-const { PrismaClientKnownRequestError } = require('@prisma/client/runtime');
 const prisma = new PrismaClient();
 
 const bcrypt = require('bcryptjs');
@@ -8,33 +7,6 @@ const createError = require('http-errors');
 const jwt = require('../utils/jwt');
 
 class authService {
-  static async register(data) {
-    try {
-      data.password = await bcrypt.hash(data.password, 8);
-      const user = await prisma.user.create({ data });
-
-      const tokenIdentifier = uuidv4();
-      const hashedTokenIdentifier = await bcrypt.hash(tokenIdentifier, 8);
-
-      const refreshToken = await jwt.signRefreshToken({
-        userId: user.id,
-        tokenIdentifier,
-      });
-      const accessToken = await jwt.signAccessToken({ userId: user.id });
-
-      await prisma.user.update({
-        where: { id: user.id },
-        data: { tokenIdentifier: hashedTokenIdentifier },
-      });
-
-      return { accessToken, refreshToken };
-    } catch (e) {
-      if (e instanceof PrismaClientKnownRequestError && e.code === 'P2002')
-        throw createError.Conflict('User Already Exists');
-      else throw createError.InternalServerError();
-    }
-  }
-
   static async login(data) {
     try {
       const { email, password } = data;

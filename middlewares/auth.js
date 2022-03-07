@@ -4,7 +4,7 @@ const createError = require('http-errors');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-function auth(role = 'STUDENT') {
+function auth(role = ['STUDENT', 'TEACHER', 'ADMIN']) {
   return async (req, res, next) => {
     if (!req.headers.authorization) {
       return next(createError.Unauthorized('Missing Access Token'));
