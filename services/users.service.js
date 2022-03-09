@@ -31,7 +31,7 @@ class usersService {
       if (e instanceof PrismaClientKnownRequestError && e.code === 'P2002')
         throw createError.Conflict('User Already Exists');
       else if (e instanceof PrismaClientKnownRequestError && e.code === 'P2003')
-        throw createError.Conflict('Invalid Class Id');
+        throw createError.Conflict('Class Does Not Exist');
       else throw createError.InternalServerError();
     }
   }
@@ -87,6 +87,50 @@ class usersService {
     } catch (e) {
       if (createError.isHttpError(e)) throw e;
       else throw createError.InternalServerError();
+    }
+  }
+
+  static async updateOne({ data }) {
+    try {
+      if (data.password) data.password = await bcrypt.hash(data.password, 8);
+      const user = await prisma.user.update({
+        select: {
+          id: true,
+          createdAt: true,
+          updatedAt: true,
+          email: true,
+          name: true,
+          role: true,
+          class: {
+            include: {
+              year: true,
+            },
+          },
+        },
+        where: { id: data.id },
+        data,
+      });
+
+      return user;
+    } catch (e) {
+      if (createError.isHttpError(e)) throw e;
+      else if (e instanceof PrismaClientKnownRequestError && e.code === 'P2002')
+        throw createError.Conflict('Email Already Taken');
+      else if (e instanceof PrismaClientKnownRequestError && e.code === 'P2003')
+        throw createError.Conflict('Class Does Not Exist');
+      else if (e instanceof PrismaClientKnownRequestError && e.code === 'P2025')
+        throw createError.NotFound('User Not Found');
+      else throw createError.InternalServerError();
+    }
+  }
+
+  static async deleteOne({ data }) {
+    try {
+      await prisma.user.delete({ where: { id: data.id } });
+    } catch (e) {
+      if (e instanceof PrismaClientKnownRequestError && e.code === 'P2025')
+        throw createError.NotFound('User Not Found');
+      throw createError.InternalServerError();
     }
   }
 }

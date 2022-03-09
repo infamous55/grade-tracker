@@ -2,6 +2,7 @@ const service = require('../services/users.service');
 const createError = require('http-errors');
 
 const getOptions = require('../utils/options');
+const getId = require('../utils/id');
 
 class usersController {
   static async createOne(req, res, next) {
@@ -26,12 +27,32 @@ class usersController {
 
   static async getOne(req, res, next) {
     try {
-      const id = parseInt(req.params.id);
-      if (isNaN(id)) throw createError.BadRequest('Invalid User Id');
-
+      const id = getId(req);
       const user = await service.getOne({ data: { id } });
 
       res.status(200).json(user);
+    } catch (e) {
+      next(createError(e.statusCode, e.message));
+    }
+  }
+
+  static async updateOne(req, res, next) {
+    try {
+      const id = getId(req);
+      const user = await service.updateOne({ data: { id, ...req.body } });
+
+      res.status(200).json(user);
+    } catch (e) {
+      next(createError(e.statusCode, e.message));
+    }
+  }
+
+  static async deleteOne(req, res, next) {
+    try {
+      const id = getId(req);
+      await service.deleteOne({ data: { id } });
+
+      res.status(204).send();
     } catch (e) {
       next(createError(e.statusCode, e.message));
     }

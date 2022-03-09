@@ -16,7 +16,7 @@ model User {
   name            String
   role            Role     @default(STUDENT)
   tokenIdentifier String?
-  class           Class?    @relation(fields: [classId], references: [id])
+  class           Class?   @relation(fields: [classId], references: [id])
   classId         Int?
   student         Grade[]  @relation("student")
   teacher         Grade[]  @relation("teacher")
