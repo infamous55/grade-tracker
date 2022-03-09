@@ -1,8 +1,7 @@
 const jwt = require('../utils/jwt');
 const createError = require('http-errors');
 
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
+const prisma = require('../utils/prisma');
 
 function auth(role = ['STUDENT', 'TEACHER', 'ADMIN']) {
   return async (req, res, next) => {

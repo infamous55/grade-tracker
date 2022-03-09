@@ -1,9 +1,8 @@
-const { PrismaClient } = require('@prisma/client');
-const { PrismaClientKnownRequestError } = require('@prisma/client/runtime');
-const prisma = new PrismaClient();
-
 const bcrypt = require('bcryptjs');
 const createError = require('http-errors');
+const { PrismaClientKnownRequestError } = require('@prisma/client/runtime');
+
+const prisma = require('../utils/prisma');
 
 class usersService {
   static async createOne({ data }) {

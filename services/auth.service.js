@@ -1,10 +1,9 @@
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
-
 const bcrypt = require('bcryptjs');
 const { v4: uuidv4 } = require('uuid');
 const createError = require('http-errors');
+
 const jwt = require('../utils/jwt');
+const prisma = require('../utils/prisma');
 
 class authService {
   static async login(data) {
