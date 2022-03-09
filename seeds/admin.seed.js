@@ -1,10 +1,11 @@
-const auth = require('../services/auth.service');
+const user = require('../services/users.service');
 
 (async function () {
-  await auth.register({
+  const data = {
     email: 'admin@admin.com',
     name: 'admin',
     password: 'password',
     role: 'ADMIN',
-  });
+  };
+  await user.createOne({ data });
 })();
