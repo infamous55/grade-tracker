@@ -1,14 +1,13 @@
 const router = require('express').Router();
-const auth = require('./auth');
-const users = require('./users');
 const createError = require('http-errors');
 
 router.get('/ping', (req, res) => {
   res.status(200).json({ success: true });
 });
 
-router.use('/auth', auth);
-router.use('/users', users);
+router.use('/auth', require('./auth'));
+router.use('/users', require('./users'));
+router.use('/years', require('./years'));
 
 router.use((req, res, next) => {
   next(createError.NotFound('Route Not Found'));

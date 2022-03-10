@@ -40,7 +40,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       jwt.verify(token, accessTokenSecret, (err, payload) => {
         if (err) {
-          if (err.name === 'JsonWebTokenError')
+          if (err.name === 'JsonWebTokenError' || err.name === 'SyntaxError')
             return reject(createError.Unauthorized('Unauthorized'));
           else if (err.name === 'TokenExpiredError')
             return reject(createError.Unauthorized('Token Expired'));
@@ -54,7 +54,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       jwt.verify(token, refreshTokenSecret, (err, payload) => {
         if (err) {
-          if (err.name === 'JsonWebTokenError')
+          if (err.name === 'JsonWebTokenError' || err.name === 'SyntaxError')
             return reject(createError.Unauthorized('Unauthorized'));
           else if (err.name === 'TokenExpiredError')
             return reject(createError.Unauthorized('Token Expired'));

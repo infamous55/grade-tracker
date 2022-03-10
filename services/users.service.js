@@ -112,8 +112,7 @@ class usersService {
 
       return user;
     } catch (e) {
-      if (createError.isHttpError(e)) throw e;
-      else if (e instanceof PrismaClientKnownRequestError && e.code === 'P2002')
+      if (e instanceof PrismaClientKnownRequestError && e.code === 'P2002')
         throw createError.Conflict('Email Already Taken');
       else if (e instanceof PrismaClientKnownRequestError && e.code === 'P2003')
         throw createError.Conflict('Class Does Not Exist');

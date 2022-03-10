@@ -13,6 +13,7 @@
     "prisma": "^3.10.0"
   },
   "dependencies": {
+    "@joi/date": "^2.1.0",
     "@prisma/client": "^3.10.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.1",
