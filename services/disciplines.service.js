@@ -3,28 +3,26 @@ const { PrismaClientKnownRequestError } = require('@prisma/client/runtime');
 
 const prisma = require('../utils/prisma');
 
-class semestersService {
+class disciplinesService {
   static async createOne({ data }) {
     try {
-      const semester = await prisma.semester.create({ data });
-      return semester;
+      const discipline = await prisma.discipline.create({ data });
+      return discipline;
     } catch (e) {
       if (e instanceof PrismaClientKnownRequestError && e.code === 'P2002')
-        throw createError.Conflict('Semester Already Exists');
-      else if (e instanceof PrismaClientKnownRequestError && e.code === 'P2003')
-        throw createError.Conflict('Year Does Not Exist');
+        throw createError.Conflict('Discipline Already Exists');
       else throw createError.InternalServerError();
     }
   }
 
   static async getAll({ options }) {
     try {
-      const semesters = await prisma.semester.findMany({
+      const disciplines = await prisma.discipline.findMany({
         skip: options.skip,
         take: options.take,
         orderBy: { id: options.sort },
       });
-      return semesters;
+      return disciplines;
     } catch (e) {
       throw createError.InternalServerError();
     }
@@ -32,12 +30,12 @@ class semestersService {
 
   static async getOne({ data }) {
     try {
-      const semester = await prisma.semester.findUnique({
+      const discipline = await prisma.discipline.findUnique({
         where: { id: data.id },
       });
-      if (!semester) throw createError.NotFound('Semester Not Found');
+      if (!discipline) throw createError.NotFound('Discipline Not Found');
 
-      return semester;
+      return discipline;
     } catch (e) {
       if (createError.isHttpError(e)) throw e;
       else throw createError.InternalServerError();
@@ -46,31 +44,29 @@ class semestersService {
 
   static async updateOne({ data }) {
     try {
-      const semester = await prisma.semester.update({
+      const discipline = await prisma.discipline.update({
         where: { id: data.id },
         data,
       });
-      return semester;
+      return discipline;
     } catch (e) {
       if (e instanceof PrismaClientKnownRequestError && e.code === 'P2002')
-        throw createError.Conflict('Semester Already Exists');
-      else if (e instanceof PrismaClientKnownRequestError && e.code === 'P2003')
-        throw createError.Conflict('Year Does Not Exist');
+        throw createError.Conflict('Discipline Already Exists');
       else if (e instanceof PrismaClientKnownRequestError && e.code === 'P2025')
-        throw createError.NotFound('Semester Not Found');
+        throw createError.NotFound('Discipline Not Found');
       else throw createError.InternalServerError();
     }
   }
 
   static async deleteOne({ data }) {
     try {
-      await prisma.semester.delete({ where: { id: data.id } });
+      await prisma.discipline.delete({ where: { id: data.id } });
     } catch (e) {
       if (e instanceof PrismaClientKnownRequestError && e.code === 'P2025')
-        throw createError.NotFound('Semester Not Found');
+        throw createError.NotFound('Discipline Not Found');
       throw createError.InternalServerError();
     }
   }
 }
 
-module.exports = semestersService;
+module.exports = disciplinesService;

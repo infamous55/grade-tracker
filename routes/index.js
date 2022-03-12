@@ -9,6 +9,7 @@ router.use('/auth', require('./auth'));
 router.use('/users', require('./users'));
 router.use('/years', require('./years'));
 router.use('/semesters', require('./semesters'));
+router.use('/disciplines', require('./disciplines'));
 
 router.use((req, res, next) => {
   next(createError.NotFound('Route Not Found'));
