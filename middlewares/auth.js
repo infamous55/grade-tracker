@@ -20,9 +20,16 @@ function auth(role = ['STUDENT', 'TEACHER', 'ADMIN']) {
         where: { id: payload.userId },
         select: {
           id: true,
+          createdAt: true,
+          updatedAt: true,
           email: true,
           name: true,
           role: true,
+          class: {
+            include: {
+              year: true,
+            },
+          },
         },
       });
       if (!user) return next(createError.Unauthorized('Unauthorized'));

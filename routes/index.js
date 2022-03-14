@@ -1,8 +1,13 @@
 const router = require('express').Router();
 const createError = require('http-errors');
+const auth = require('../middlewares/auth');
 
 router.get('/ping', (req, res) => {
   res.status(200).json({ success: true });
+});
+
+router.get('/userinfo', auth(), (req, res) => {
+  res.status(200).json(req.user);
 });
 
 router.use('/auth', require('./auth'));
