@@ -9,12 +9,13 @@
   "author": "infamous55",
   "license": "MIT",
   "devDependencies": {
+    "axios": "^0.26.1",
     "nodemon": "^2.0.15",
-    "prisma": "^3.10.0"
+    "prisma": "^3.11.0"
   },
   "dependencies": {
     "@joi/date": "^2.1.0",
-    "@prisma/client": "^3.10.0",
+    "@prisma/client": "^3.11.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.1",
     "dotenv": "^16.0.0",

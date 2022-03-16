@@ -42,6 +42,7 @@ CREATE TABLE "Semester" (
     "id" SERIAL NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "number" INTEGER NOT NULL,
     "yearId" INTEGER NOT NULL,
 
     CONSTRAINT "Semester_pkey" PRIMARY KEY ("id")
@@ -75,6 +76,18 @@ CREATE TABLE "Class" (
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Discipline_name_key" ON "Discipline"("name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Year_startDate_endDate_key" ON "Year"("startDate", "endDate");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Semester_number_yearId_key" ON "Semester"("number", "yearId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Class_number_letter_yearId_key" ON "Class"("number", "letter", "yearId");
 
 -- AddForeignKey
 ALTER TABLE "User" ADD CONSTRAINT "User_classId_fkey" FOREIGN KEY ("classId") REFERENCES "Class"("id") ON DELETE SET NULL ON UPDATE CASCADE;
