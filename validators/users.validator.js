@@ -16,7 +16,13 @@ const updateUser = Joi.object({
   classId: Joi.number().integer().positive().optional(),
 }).min(1);
 
+const updateCurrentUser = Joi.object({
+  email: Joi.string().email().optional(),
+  password: Joi.string().min(1).max(128).optional(),
+}).min(1);
+
 module.exports = {
   createUser,
   updateUser,
+  updateCurrentUser,
 };
