@@ -6,7 +6,10 @@ const prisma = require('../utils/prisma');
 class semestersService {
   static async createOne({ data }) {
     try {
-      const semester = await prisma.semester.create({ data });
+      const semester = await prisma.semester.create({
+        data,
+        include: { year: true },
+      });
       return semester;
     } catch (e) {
       if (e instanceof PrismaClientKnownRequestError && e.code === 'P2002')
@@ -22,6 +25,7 @@ class semestersService {
       const semesters = await prisma.semester.findMany({
         skip: options.skip,
         take: options.take,
+        include: { year: true },
         orderBy: { id: options.sort },
       });
       return semesters;
@@ -34,6 +38,7 @@ class semestersService {
     try {
       const semester = await prisma.semester.findUnique({
         where: { id: data.id },
+        include: { year: true },
       });
       if (!semester) throw createError.NotFound('Semester Not Found');
 
@@ -48,6 +53,7 @@ class semestersService {
     try {
       const semester = await prisma.semester.update({
         where: { id: data.id },
+        include: { year: true },
         data,
       });
       return semester;

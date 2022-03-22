@@ -13,7 +13,17 @@ class gradesService {
       else if (student.role !== 'STUDENT')
         throw createError.Conflict('Not A Student');
 
-      const grade = await prisma.grade.create({ data });
+      const grade = await prisma.grade.create({
+        data,
+        include: {
+          discipline: true,
+          semester: {
+            include: {
+              year: true,
+            },
+          },
+        },
+      });
       return grade;
     } catch (e) {
       if (createError.isHttpError(e)) throw e;
@@ -35,6 +45,14 @@ class gradesService {
       const grades = await prisma.grade.findMany({
         skip: options.skip,
         take: options.take,
+        include: {
+          discipline: true,
+          semester: {
+            include: {
+              year: true,
+            },
+          },
+        },
         orderBy: { id: options.sort },
       });
       return grades;
@@ -47,6 +65,14 @@ class gradesService {
     try {
       const grade = await prisma.grade.findUnique({
         where: { id: data.id },
+        include: {
+          discipline: true,
+          semester: {
+            include: {
+              year: true,
+            },
+          },
+        },
       });
       if (!grade) throw createError.NotFound('Grade Not Found');
 
@@ -70,6 +96,14 @@ class gradesService {
 
       const grade = await prisma.grade.update({
         where: { id: data.id },
+        include: {
+          discipline: true,
+          semester: {
+            include: {
+              year: true,
+            },
+          },
+        },
         data,
       });
       return grade;
