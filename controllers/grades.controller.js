@@ -2,7 +2,6 @@ const service = require('../services/grades.service');
 const createError = require('http-errors');
 
 const getOptions = require('../utils/options');
-const getId = require('../utils/id');
 
 class gradeController {
   static async createOne(req, res, next) {
@@ -19,7 +18,8 @@ class gradeController {
   static async getAll(req, res, next) {
     try {
       const options = getOptions(req);
-      const grades = await service.getAll({ options });
+      const userId = parseInt(req.params.userId);
+      const grades = await service.getAll({ options, data: { userId } });
 
       res.status(200).json(grades);
     } catch (e) {
@@ -29,8 +29,8 @@ class gradeController {
 
   static async getOne(req, res, next) {
     try {
-      const id = getId(req);
-      const grade = await service.getOne({ data: { id } });
+      const gradeId = parseInt(req.params.gradeId);
+      const grade = await service.getOne({ data: { gradeId } });
 
       res.status(200).json(grade);
     } catch (e) {
@@ -40,9 +40,9 @@ class gradeController {
 
   static async updateOne(req, res, next) {
     try {
-      const id = getId(req);
+      const gradeId = parseInt(req.params.gradeId);
       const grade = await service.updateOne({
-        data: { id, ...req.body, teacherId: req.user.id },
+        data: { gradeId, ...req.body, teacherId: req.user.id },
       });
 
       res.status(200).json(grade);
@@ -53,8 +53,8 @@ class gradeController {
 
   static async deleteOne(req, res, next) {
     try {
-      const id = getId(req);
-      await service.deleteOne({ data: { id } });
+      const gradeId = parseInt(req.params.gradeId);
+      await service.deleteOne({ data: { gradeId } });
 
       res.status(204).send();
     } catch (e) {

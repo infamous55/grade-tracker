@@ -33,7 +33,7 @@ class classService {
   static async getOne({ data }) {
     try {
       const selectedClass = await prisma.class.findUnique({
-        where: { id: data.id },
+        where: { id: data.classId },
       });
       if (!selectedClass) throw createError.NotFound('Class Not Found');
 
@@ -47,7 +47,7 @@ class classService {
   static async updateOne({ data }) {
     try {
       const updatedClass = await prisma.class.update({
-        where: { id: data.id },
+        where: { id: data.classId },
         data,
       });
       return updatedClass;
@@ -64,7 +64,7 @@ class classService {
 
   static async deleteOne({ data }) {
     try {
-      await prisma.class.delete({ where: { id: data.id } });
+      await prisma.class.delete({ where: { id: data.classId } });
     } catch (e) {
       if (e instanceof PrismaClientKnownRequestError && e.code === 'P2025')
         throw createError.NotFound('Class Not Found');

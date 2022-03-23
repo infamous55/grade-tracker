@@ -37,7 +37,7 @@ class semestersService {
   static async getOne({ data }) {
     try {
       const semester = await prisma.semester.findUnique({
-        where: { id: data.id },
+        where: { id: data.semesterId },
         include: { year: true },
       });
       if (!semester) throw createError.NotFound('Semester Not Found');
@@ -52,7 +52,7 @@ class semestersService {
   static async updateOne({ data }) {
     try {
       const semester = await prisma.semester.update({
-        where: { id: data.id },
+        where: { id: data.semesterId },
         include: { year: true },
         data,
       });
@@ -70,7 +70,7 @@ class semestersService {
 
   static async deleteOne({ data }) {
     try {
-      await prisma.semester.delete({ where: { id: data.id } });
+      await prisma.semester.delete({ where: { id: data.semesterId } });
     } catch (e) {
       if (e instanceof PrismaClientKnownRequestError && e.code === 'P2025')
         throw createError.NotFound('Semester Not Found');

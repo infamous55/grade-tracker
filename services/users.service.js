@@ -78,12 +78,13 @@ class usersService {
             },
           },
         },
-        where: { id: data.id },
+        where: { id: data.userId },
       });
       if (!user) throw createError.NotFound('User Not Found');
 
       return user;
     } catch (e) {
+      console.log(e);
       if (createError.isHttpError(e)) throw e;
       else throw createError.InternalServerError();
     }
@@ -106,7 +107,7 @@ class usersService {
             },
           },
         },
-        where: { id: data.id },
+        where: { id: data.userId },
         data,
       });
 
@@ -124,7 +125,7 @@ class usersService {
 
   static async deleteOne({ data }) {
     try {
-      await prisma.user.delete({ where: { id: data.id } });
+      await prisma.user.delete({ where: { id: data.userId } });
     } catch (e) {
       if (e instanceof PrismaClientKnownRequestError && e.code === 'P2025')
         throw createError.NotFound('User Not Found');

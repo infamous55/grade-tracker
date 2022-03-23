@@ -2,7 +2,6 @@ const service = require('../services/disciplines.service');
 const createError = require('http-errors');
 
 const getOptions = require('../utils/options');
-const getId = require('../utils/id');
 
 class disciplinesController {
   static async createOne(req, res, next) {
@@ -27,8 +26,8 @@ class disciplinesController {
 
   static async getOne(req, res, next) {
     try {
-      const id = getId(req);
-      const discipline = await service.getOne({ data: { id } });
+      const disciplineId = parseInt(req.params.disciplineId);
+      const discipline = await service.getOne({ data: { disciplineId } });
 
       res.status(200).json(discipline);
     } catch (e) {
@@ -38,8 +37,10 @@ class disciplinesController {
 
   static async updateOne(req, res, next) {
     try {
-      const id = getId(req);
-      const discipline = await service.updateOne({ data: { id, ...req.body } });
+      const disciplineId = parseInt(req.params.disciplineId);
+      const discipline = await service.updateOne({
+        data: { disciplineId, ...req.body },
+      });
 
       res.status(200).json(discipline);
     } catch (e) {
@@ -49,8 +50,8 @@ class disciplinesController {
 
   static async deleteOne(req, res, next) {
     try {
-      const id = getId(req);
-      await service.deleteOne({ data: { id } });
+      const disciplineId = parseInt(req.params.disciplineId);
+      await service.deleteOne({ data: { disciplineId } });
 
       res.status(204).send();
     } catch (e) {

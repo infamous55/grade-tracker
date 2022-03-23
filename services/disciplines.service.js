@@ -31,7 +31,7 @@ class disciplinesService {
   static async getOne({ data }) {
     try {
       const discipline = await prisma.discipline.findUnique({
-        where: { id: data.id },
+        where: { id: data.disciplineId },
       });
       if (!discipline) throw createError.NotFound('Discipline Not Found');
 
@@ -45,7 +45,7 @@ class disciplinesService {
   static async updateOne({ data }) {
     try {
       const discipline = await prisma.discipline.update({
-        where: { id: data.id },
+        where: { id: data.disciplineId },
         data,
       });
       return discipline;
@@ -60,7 +60,7 @@ class disciplinesService {
 
   static async deleteOne({ data }) {
     try {
-      await prisma.discipline.delete({ where: { id: data.id } });
+      await prisma.discipline.delete({ where: { id: data.disciplineId } });
     } catch (e) {
       if (e instanceof PrismaClientKnownRequestError && e.code === 'P2025')
         throw createError.NotFound('Discipline Not Found');

@@ -30,7 +30,7 @@ class yearsService {
 
   static async getOne({ data }) {
     try {
-      const year = await prisma.year.findUnique({ where: { id: data.id } });
+      const year = await prisma.year.findUnique({ where: { id: data.yearId } });
       if (!year) throw createError.NotFound('Year Not Found');
 
       return year;
@@ -42,7 +42,10 @@ class yearsService {
 
   static async updateOne({ data }) {
     try {
-      const year = await prisma.year.update({ where: { id: data.id }, data });
+      const year = await prisma.year.update({
+        where: { id: data.yearId },
+        data,
+      });
       return year;
     } catch (e) {
       if (e instanceof PrismaClientKnownRequestError && e.code === 'P2002')
@@ -55,7 +58,7 @@ class yearsService {
 
   static async deleteOne({ data }) {
     try {
-      await prisma.year.delete({ where: { id: data.id } });
+      await prisma.year.delete({ where: { id: data.yearId } });
     } catch (e) {
       if (e instanceof PrismaClientKnownRequestError && e.code === 'P2025')
         throw createError.NotFound('Year Not Found');

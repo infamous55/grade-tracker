@@ -40,7 +40,7 @@ class gradesService {
     }
   }
 
-  static async getAll({ options }) {
+  static async getAll({ options, data }) {
     try {
       const grades = await prisma.grade.findMany({
         skip: options.skip,
@@ -53,10 +53,14 @@ class gradesService {
             },
           },
         },
+        where: {
+          studentId: data.userId,
+        },
         orderBy: { id: options.sort },
       });
       return grades;
     } catch (e) {
+      console.log(e);
       throw createError.InternalServerError();
     }
   }
@@ -64,7 +68,7 @@ class gradesService {
   static async getOne({ data }) {
     try {
       const grade = await prisma.grade.findUnique({
-        where: { id: data.id },
+        where: { id: data.gradeId },
         include: {
           discipline: true,
           semester: {
@@ -95,7 +99,7 @@ class gradesService {
       }
 
       const grade = await prisma.grade.update({
-        where: { id: data.id },
+        where: { id: data.gradeId },
         include: {
           discipline: true,
           semester: {
@@ -125,7 +129,7 @@ class gradesService {
 
   static async deleteOne({ data }) {
     try {
-      await prisma.grade.delete({ where: { id: data.id } });
+      await prisma.grade.delete({ where: { id: data.gradeId } });
     } catch (e) {
       if (e instanceof PrismaClientKnownRequestError && e.code === 'P2025')
         throw createError.NotFound('Grade Not Found');
