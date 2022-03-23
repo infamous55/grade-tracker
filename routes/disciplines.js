@@ -6,18 +6,23 @@ const validate = require('../middlewares/validate');
 const { param } = require('express-validator');
 const { handleParameterErrors } = require('../middlewares/errors.js');
 
-router.use(auth('ADMIN'));
-
-router.post('/', validate(schema.createDiscipline), disciplines.createOne);
-router.get('/', disciplines.getAll);
+router.post(
+  '/',
+  auth('ADMIN'),
+  validate(schema.createDiscipline),
+  disciplines.createOne
+);
+router.get('/', auth(), disciplines.getAll);
 router.get(
   '/:disciplineId',
+  auth(),
   param('disciplineId').isInt({ min: 1 }),
   handleParameterErrors(),
   disciplines.getOne
 );
 router.put(
   '/:disciplineId',
+  auth('ADMIN'),
   param('disciplineId').isInt({ min: 1 }),
   handleParameterErrors(),
   validate(schema.updateDiscipline),
@@ -25,6 +30,7 @@ router.put(
 );
 router.delete(
   '/:disciplineId',
+  auth('ADMIN'),
   param('disciplineId').isInt({ min: 1 }),
   handleParameterErrors(),
   disciplines.deleteOne

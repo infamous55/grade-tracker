@@ -6,18 +6,23 @@ const validate = require('../middlewares/validate');
 const { param } = require('express-validator');
 const { handleParameterErrors } = require('../middlewares/errors.js');
 
-router.use(auth(['TEACHER', 'ADMIN']));
-
-router.post('/', validate(schema.createGrade), grades.createOne);
-router.get('/', grades.getAll);
+router.post(
+  '/',
+  auth(['TEACHER', 'ADMIN']),
+  validate(schema.createGrade),
+  grades.createOne
+);
+router.get('/', auth(), grades.getAll);
 router.get(
   '/:gradeId',
+  auth(),
   param('gradeId').isInt({ min: 1 }),
   handleParameterErrors(),
   grades.getOne
 );
 router.put(
   '/:gradeId',
+  auth(['TEACHER', 'ADMIN']),
   param('gradeId').isInt({ min: 1 }),
   handleParameterErrors(),
   validate(schema.updateGrade),
@@ -25,6 +30,7 @@ router.put(
 );
 router.delete(
   '/:gradeId',
+  auth(['TEACHER', 'ADMIN']),
   param('gradeId').isInt({ min: 1 }),
   handleParameterErrors(),
   grades.deleteOne
