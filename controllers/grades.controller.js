@@ -49,6 +49,9 @@ class gradeController {
       if (req.user.role === 'STUDENT' && grade.studentId !== req.user.id)
         throw createError.Forbidden('Missing Permissions');
 
+      if (req.params.userId && parseInt(req.params.userId) != grade.studentId)
+        throw createError.NotFound('Grade Not Found');
+
       res.status(200).json(grade);
     } catch (e) {
       next(createError(e.statusCode, e.message));
