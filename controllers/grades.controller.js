@@ -18,7 +18,22 @@ class gradeController {
   static async getAll(req, res, next) {
     try {
       const options = getOptions(req);
-      const userId = parseInt(req.params.userId);
+
+      let userId;
+
+      if (req.user.role === 'STUDENT' && !req.params.userId)
+        userId = req.user.id;
+      else if (
+        req.user.role === 'STUDENT' &&
+        req.params.userId &&
+        parseInt(req.params.userId) !== req.user.id
+      )
+        throw createError.Forbidden('Missing Permissions');
+      else
+        !isNaN(parseInt(req.params.userId))
+          ? (userId = parseInt(req.params.userId))
+          : (userId = undefined);
+
       const grades = await service.getAll({ options, data: { userId } });
 
       res.status(200).json(grades);
@@ -31,6 +46,9 @@ class gradeController {
     try {
       const gradeId = parseInt(req.params.gradeId);
       const grade = await service.getOne({ data: { gradeId } });
+
+      if (req.user.role === 'STUDENT' && grade.studentId !== req.user.id)
+        throw createError.Forbidden('Missing Permissions');
 
       res.status(200).json(grade);
     } catch (e) {
