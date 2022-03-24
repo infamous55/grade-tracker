@@ -6,29 +6,21 @@ const validate = require('../middlewares/validate');
 const { param } = require('express-validator');
 const { handleParameterErrors } = require('../middlewares/errors.js');
 
-router.post('/', auth('ADMIN'), validate(schema.createYear), years.createOne);
-router.get('/', auth(), years.getAll);
-router.get(
-  '/:yearId',
-  auth(),
+const yearIdValidation = [
   param('yearId').isInt({ min: 1 }),
   handleParameterErrors(),
-  years.getOne
-);
+];
+
+router.post('/', auth('ADMIN'), validate(schema.createYear), years.createOne);
+router.get('/', auth(), years.getAll);
+router.get('/:yearId', auth(), yearIdValidation, years.getOne);
 router.put(
   '/:yearId',
   auth('ADMIN'),
-  param('yearId').isInt({ min: 1 }),
-  handleParameterErrors(),
+  yearIdValidation,
   validate(schema.updateYear),
   years.updateOne
 );
-router.delete(
-  '/:yearId',
-  auth('ADMIN'),
-  param('yearId').isInt({ min: 1 }),
-  handleParameterErrors(),
-  years.deleteOne
-);
+router.delete('/:yearId', auth('ADMIN'), yearIdValidation, years.deleteOne);
 
 module.exports = router;

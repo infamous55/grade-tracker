@@ -6,6 +6,11 @@ const validate = require('../middlewares/validate');
 const { param } = require('express-validator');
 const { handleParameterErrors } = require('../middlewares/errors.js');
 
+const classIdValidation = [
+  param('classId').isInt({ min: 1 }),
+  handleParameterErrors(),
+];
+
 router.post(
   '/',
   auth('ADMIN'),
@@ -13,27 +18,14 @@ router.post(
   classes.createOne
 );
 router.get('/', auth(), classes.getAll);
-router.get(
-  '/:classId',
-  auth(),
-  param('classId').isInt({ min: 1 }),
-  handleParameterErrors(),
-  classes.getOne
-);
+router.get('/:classId', auth(), classIdValidation, classes.getOne);
 router.put(
   '/:classId',
   auth('ADMIN'),
-  param('classId').isInt({ min: 1 }),
-  handleParameterErrors(),
+  classIdValidation,
   validate(schema.updateClass),
   classes.updateOne
 );
-router.delete(
-  '/:classId',
-  auth('ADMIN'),
-  param('classId').isInt({ min: 1 }),
-  handleParameterErrors(),
-  classes.deleteOne
-);
+router.delete('/:classId', auth('ADMIN'), classIdValidation, classes.deleteOne);
 
 module.exports = router;

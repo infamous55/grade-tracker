@@ -6,6 +6,11 @@ const validate = require('../middlewares/validate');
 const { param } = require('express-validator');
 const { handleParameterErrors } = require('../middlewares/errors.js');
 
+const disciplineIdValidation = [
+  param('disciplineId').isInt({ min: 1 }),
+  handleParameterErrors(),
+];
+
 router.post(
   '/',
   auth('ADMIN'),
@@ -16,23 +21,20 @@ router.get('/', auth(), disciplines.getAll);
 router.get(
   '/:disciplineId',
   auth(),
-  param('disciplineId').isInt({ min: 1 }),
-  handleParameterErrors(),
+  disciplineIdValidation,
   disciplines.getOne
 );
 router.put(
   '/:disciplineId',
   auth('ADMIN'),
-  param('disciplineId').isInt({ min: 1 }),
-  handleParameterErrors(),
+  disciplineIdValidation,
   validate(schema.updateDiscipline),
   disciplines.updateOne
 );
 router.delete(
   '/:disciplineId',
   auth('ADMIN'),
-  param('disciplineId').isInt({ min: 1 }),
-  handleParameterErrors(),
+  disciplineIdValidation,
   disciplines.deleteOne
 );
 

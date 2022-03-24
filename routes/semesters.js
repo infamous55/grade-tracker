@@ -6,6 +6,11 @@ const validate = require('../middlewares/validate');
 const { param } = require('express-validator');
 const { handleParameterErrors } = require('../middlewares/errors.js');
 
+const semesterIdValidation = [
+  param('semesterId').isInt({ min: 1 }),
+  handleParameterErrors(),
+];
+
 router.post(
   '/',
   auth('ADMIN'),
@@ -13,26 +18,18 @@ router.post(
   semesters.createOne
 );
 router.get('/', auth(), semesters.getAll);
-router.get(
-  '/:semesterId',
-  auth(),
-  param('semesterId').isInt({ min: 1 }),
-  handleParameterErrors(),
-  semesters.getOne
-);
+router.get('/:semesterId', auth(), semesterIdValidation, semesters.getOne);
 router.put(
   '/:semesterId',
   auth('ADMIN'),
-  param('semesterId').isInt({ min: 1 }),
-  handleParameterErrors(),
+  semesterIdValidation,
   validate(schema.updateSemester),
   semesters.updateOne
 );
 router.delete(
   '/:semesterId',
   auth('ADMIN'),
-  param('semesterId').isInt({ min: 1 }),
-  handleParameterErrors(),
+  semesterIdValidation,
   semesters.deleteOne
 );
 
