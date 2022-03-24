@@ -25,12 +25,11 @@ class gradeController {
         userId = req.user.id;
       else if (
         req.user.role === 'STUDENT' &&
-        req.params.userId &&
         parseInt(req.params.userId) !== req.user.id
       )
         throw createError.Forbidden('Missing Permissions');
       else
-        !isNaN(parseInt(req.params.userId))
+        req.params.userId
           ? (userId = parseInt(req.params.userId))
           : (userId = undefined);
 
