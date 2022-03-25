@@ -44,8 +44,11 @@ class disciplinesService {
 
   static async updateOne({ data }) {
     try {
+      const { disciplineId } = data;
+      delete data.disciplineId;
+
       const discipline = await prisma.discipline.update({
-        where: { id: data.disciplineId },
+        where: { id: disciplineId },
         data,
       });
       return discipline;

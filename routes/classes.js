@@ -27,5 +27,6 @@ router.put(
   classes.updateOne
 );
 router.delete('/:classId', auth('ADMIN'), classIdValidation, classes.deleteOne);
+router.use('/:classId/users', classIdValidation, require('./users'));
 
 module.exports = router;

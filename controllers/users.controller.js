@@ -16,7 +16,11 @@ class usersController {
   static async getAll(req, res, next) {
     try {
       const options = getOptions(req);
-      const users = await service.getAll({ options });
+
+      let classId;
+      if (req.params.classId) classId = parseInt(req.params.classId);
+
+      const users = await service.getAll({ options, data: { classId } });
 
       res.status(200).json({ users });
     } catch (e) {
@@ -31,9 +35,11 @@ class usersController {
         data: { userId },
       });
 
+      if (req.params.classId && parseInt(req.params.classId) !== user.classId)
+        throw createError.NotFound('User Not Found');
+
       res.status(200).json(user);
     } catch (e) {
-      console.log(e);
       next(createError(e.statusCode, e.message));
     }
   }
@@ -41,12 +47,21 @@ class usersController {
   static async updateOne(req, res, next) {
     try {
       const userId = parseInt(req.params.userId);
-      const user = await service.updateOne({
+
+      let user;
+      user = await service.getOne({
+        data: { userId },
+      });
+      if (req.params.classId && parseInt(req.params.classId) !== user.classId)
+        throw createError.NotFound('User Not Found');
+
+      user = await service.updateOne({
         data: { userId, ...req.body },
       });
 
       res.status(200).json(user);
     } catch (e) {
+      console.log(e);
       next(createError(e.statusCode, e.message));
     }
   }
@@ -67,6 +82,13 @@ class usersController {
   static async deleteOne(req, res, next) {
     try {
       const userId = parseInt(req.params.userId);
+
+      const user = await service.getOne({
+        data: { userId },
+      });
+      if (req.params.classId && parseInt(req.params.classId) !== user.classId)
+        throw createError.NotFound('User Not Found');
+
       await service.deleteOne({ data: { userId } });
 
       res.status(204).send();

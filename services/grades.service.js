@@ -98,8 +98,11 @@ class gradesService {
           throw createError.Conflict('Not A Student');
       }
 
+      const { gradeId } = data;
+      delete data.gradeId;
+
       const grade = await prisma.grade.update({
-        where: { id: data.gradeId },
+        where: { id: gradeId },
         include: {
           discipline: true,
           semester: {

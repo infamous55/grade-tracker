@@ -42,8 +42,11 @@ class yearsService {
 
   static async updateOne({ data }) {
     try {
+      const { yearId } = data;
+      delete data.yearId;
+
       const year = await prisma.year.update({
-        where: { id: data.yearId },
+        where: { id: yearId },
         data,
       });
       return year;

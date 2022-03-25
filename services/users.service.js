@@ -35,7 +35,7 @@ class usersService {
     }
   }
 
-  static async getAll({ options }) {
+  static async getAll({ options, data }) {
     try {
       const users = await prisma.user.findMany({
         skip: options.skip,
@@ -53,6 +53,7 @@ class usersService {
             },
           },
         },
+        where: { classId: data.classId },
         orderBy: { id: options.sort },
       });
 
@@ -72,6 +73,7 @@ class usersService {
           email: true,
           name: true,
           role: true,
+          classId: true,
           class: {
             include: {
               year: true,
@@ -92,6 +94,9 @@ class usersService {
 
   static async updateOne({ data }) {
     try {
+      const { userId } = data;
+      delete data.userId;
+
       if (data.password) data.password = await bcrypt.hash(data.password, 8);
       const user = await prisma.user.update({
         select: {
@@ -107,12 +112,13 @@ class usersService {
             },
           },
         },
-        where: { id: data.userId },
+        where: { id: userId },
         data,
       });
 
       return user;
     } catch (e) {
+      console.log(e);
       if (e instanceof PrismaClientKnownRequestError && e.code === 'P2002')
         throw createError.Conflict('Email Already Taken');
       else if (e instanceof PrismaClientKnownRequestError && e.code === 'P2003')

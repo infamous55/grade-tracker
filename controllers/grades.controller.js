@@ -20,7 +20,6 @@ class gradeController {
       const options = getOptions(req);
 
       let userId;
-
       if (req.user.role === 'STUDENT' && !req.params.userId)
         userId = req.user.id;
       else if (
@@ -61,7 +60,14 @@ class gradeController {
   static async updateOne(req, res, next) {
     try {
       const gradeId = parseInt(req.params.gradeId);
-      const grade = await service.updateOne({
+
+      let grade;
+      grade = await service.getOne({ data: { gradeId } });
+
+      if (req.params.userId && parseInt(req.params.userId) != grade.studentId)
+        throw createError.NotFound('Grade Not Found');
+
+      grade = await service.updateOne({
         data: { gradeId, ...req.body, teacherId: req.user.id },
       });
 
@@ -74,6 +80,11 @@ class gradeController {
   static async deleteOne(req, res, next) {
     try {
       const gradeId = parseInt(req.params.gradeId);
+
+      const grade = await service.getOne({ data: { gradeId } });
+      if (req.params.userId && parseInt(req.params.userId) != grade.studentId)
+        throw createError.NotFound('Grade Not Found');
+
       await service.deleteOne({ data: { gradeId } });
 
       res.status(204).send();

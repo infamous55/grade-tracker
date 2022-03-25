@@ -16,7 +16,11 @@ class semestersController {
   static async getAll(req, res, next) {
     try {
       const options = getOptions(req);
-      const semesters = await service.getAll({ options });
+
+      let yearId;
+      if (req.params.yearId) yearId = parseInt(req.params.yearId);
+
+      const semesters = await service.getAll({ options, data: { yearId } });
 
       res.status(200).json(semesters);
     } catch (e) {
@@ -29,6 +33,9 @@ class semestersController {
       const semesterId = parseInt(req.params.semesterId);
       const semester = await service.getOne({ data: { semesterId } });
 
+      if (req.params.yearId && parseInt(req.params.yearId) !== semester.yearId)
+        throw createError.NotFound('Semester Not Found');
+
       res.status(200).json(semester);
     } catch (e) {
       next(createError(e.statusCode, e.message));
@@ -38,7 +45,14 @@ class semestersController {
   static async updateOne(req, res, next) {
     try {
       const semesterId = parseInt(req.params.semesterId);
-      const semester = await service.updateOne({
+
+      let semester;
+      semester = await service.getOne({ data: { semesterId } });
+
+      if (req.params.yearId && parseInt(req.params.yearId) !== semester.yearId)
+        throw createError.NotFound('Semester Not Found');
+
+      semester = await service.updateOne({
         data: { semesterId, ...req.body },
       });
 
@@ -51,6 +65,11 @@ class semestersController {
   static async deleteOne(req, res, next) {
     try {
       const semesterId = parseInt(req.params.semesterId);
+
+      const semester = await service.getOne({ data: { semesterId } });
+      if (req.params.yearId && parseInt(req.params.yearId) !== semester.yearId)
+        throw createError.NotFound('Semester Not Found');
+
       await service.deleteOne({ data: { semesterId } });
 
       res.status(204).send();

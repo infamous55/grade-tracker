@@ -22,5 +22,6 @@ router.put(
   years.updateOne
 );
 router.delete('/:yearId', auth('ADMIN'), yearIdValidation, years.deleteOne);
+router.use('/:yearId/semesters', yearIdValidation, require('./semesters'));
 
 module.exports = router;

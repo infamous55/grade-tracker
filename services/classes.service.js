@@ -46,8 +46,11 @@ class classService {
 
   static async updateOne({ data }) {
     try {
+      const classId = { data };
+      delete data.classId;
+
       const updatedClass = await prisma.class.update({
-        where: { id: data.classId },
+        where: { id: classId },
         data,
       });
       return updatedClass;

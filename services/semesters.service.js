@@ -20,12 +20,13 @@ class semestersService {
     }
   }
 
-  static async getAll({ options }) {
+  static async getAll({ options, data }) {
     try {
       const semesters = await prisma.semester.findMany({
         skip: options.skip,
         take: options.take,
         include: { year: true },
+        where: { yearId: data.yearId },
         orderBy: { id: options.sort },
       });
       return semesters;
@@ -51,8 +52,11 @@ class semestersService {
 
   static async updateOne({ data }) {
     try {
+      const { semesterId } = data;
+      delete data.semesterId;
+
       const semester = await prisma.semester.update({
-        where: { id: data.semesterId },
+        where: { id: semesterId },
         include: { year: true },
         data,
       });
