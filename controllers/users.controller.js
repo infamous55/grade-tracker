@@ -68,7 +68,7 @@ class usersController {
 
   static async updateCurrent(req, res, next) {
     try {
-      const userId = parseInt(req.params.userId);
+      const userId = req.user.id;
       const user = await service.updateOne({
         data: { userId, ...req.body },
       });
