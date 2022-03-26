@@ -133,8 +133,12 @@ class usersService {
     try {
       await prisma.user.delete({ where: { id: data.userId } });
     } catch (e) {
+      console.log(e);
+
       if (e instanceof PrismaClientKnownRequestError && e.code === 'P2025')
         throw createError.NotFound('User Not Found');
+      else if (e instanceof PrismaClientKnownRequestError && e.code === 'P2003')
+        throw createError.Conflict('Foreign Key Violation');
       throw createError.InternalServerError();
     }
   }

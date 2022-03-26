@@ -32,5 +32,6 @@ router.delete(
   semesterIdValidation,
   semesters.deleteOne
 );
+router.use('/:semesterId/grades', semesterIdValidation, require('./grades'));
 
 module.exports = router;

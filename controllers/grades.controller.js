@@ -32,7 +32,17 @@ class gradeController {
           ? (userId = parseInt(req.params.userId))
           : (userId = undefined);
 
-      const grades = await service.getAll({ options, data: { userId } });
+      let semesterId;
+      if (req.params.semesterId) semesterId = parseInt(req.params.semesterId);
+
+      let disciplineId;
+      if (req.params.disciplineId)
+        disciplineId = parseInt(req.params.disciplineId);
+
+      const grades = await service.getAll({
+        options,
+        data: { userId, semesterId, disciplineId },
+      });
 
       res.status(200).json(grades);
     } catch (e) {
@@ -48,7 +58,14 @@ class gradeController {
       if (req.user.role === 'STUDENT' && grade.studentId !== req.user.id)
         throw createError.Forbidden('Missing Permissions');
 
-      if (req.params.userId && parseInt(req.params.userId) != grade.studentId)
+      if (
+        (req.params.userId &&
+          parseInt(req.params.userId) !== grade.studentId) ||
+        (req.params.semesterId &&
+          parseInt(req.params.semesterId) !== grade.semesterId) ||
+        (req.params.disciplineId &&
+          parseInt(req.params.disciplineId) !== grade.disciplineId)
+      )
         throw createError.NotFound('Grade Not Found');
 
       res.status(200).json(grade);
@@ -64,7 +81,13 @@ class gradeController {
       let grade;
       grade = await service.getOne({ data: { gradeId } });
 
-      if (req.params.userId && parseInt(req.params.userId) != grade.studentId)
+      if (
+        (req.params.userId && parseInt(req.params.userId) != grade.studentId) ||
+        (req.params.semesterId &&
+          parseInt(req.params.semesterId) !== grade.semesterId) ||
+        (req.params.disciplineId &&
+          parseInt(req.params.disciplineId) !== grade.disciplineId)
+      )
         throw createError.NotFound('Grade Not Found');
 
       grade = await service.updateOne({
@@ -82,7 +105,13 @@ class gradeController {
       const gradeId = parseInt(req.params.gradeId);
 
       const grade = await service.getOne({ data: { gradeId } });
-      if (req.params.userId && parseInt(req.params.userId) != grade.studentId)
+      if (
+        (req.params.userId && parseInt(req.params.userId) != grade.studentId) ||
+        (req.params.semesterId &&
+          parseInt(req.params.semesterId) !== grade.semesterId) ||
+        (req.params.disciplineId &&
+          parseInt(req.params.disciplineId) !== grade.disciplineId)
+      )
         throw createError.NotFound('Grade Not Found');
 
       await service.deleteOne({ data: { gradeId } });

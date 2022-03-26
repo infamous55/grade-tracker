@@ -55,6 +55,8 @@ class gradesService {
         },
         where: {
           studentId: data.userId,
+          semesterId: data.semesterId,
+          disciplineId: data.disciplineId,
         },
         orderBy: { id: options.sort },
       });

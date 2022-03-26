@@ -67,6 +67,8 @@ class disciplinesService {
     } catch (e) {
       if (e instanceof PrismaClientKnownRequestError && e.code === 'P2025')
         throw createError.NotFound('Discipline Not Found');
+      else if (e instanceof PrismaClientKnownRequestError && e.code === 'P2003')
+        throw createError.Conflict('Foreign Key Violation');
       throw createError.InternalServerError();
     }
   }

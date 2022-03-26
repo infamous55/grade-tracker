@@ -37,5 +37,10 @@ router.delete(
   disciplineIdValidation,
   disciplines.deleteOne
 );
+router.use(
+  '/:disciplineId/grades',
+  disciplineIdValidation,
+  require('./grades')
+);
 
 module.exports = router;

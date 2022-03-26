@@ -71,7 +71,9 @@ class classService {
     } catch (e) {
       if (e instanceof PrismaClientKnownRequestError && e.code === 'P2025')
         throw createError.NotFound('Class Not Found');
-      throw createError.InternalServerError();
+      else if (e instanceof PrismaClientKnownRequestError && e.code === 'P2003')
+        throw createError.Conflict('Foreign Key Violation');
+      else throw createError.InternalServerError();
     }
   }
 }
