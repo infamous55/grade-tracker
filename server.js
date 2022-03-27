@@ -27,7 +27,7 @@ const apiLimiter = rateLimit({
   legacyHeaders: false,
 });
 
-app.use('/api/v1', apiLimiter, require('./routes'));
+app.use('/api/v1', apiLimiter, require('./src/routes'));
 
 const PORT = 5000 || process.env.PORT;
 
