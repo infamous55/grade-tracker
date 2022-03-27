@@ -5,6 +5,7 @@ const schema = require('../validators/grades.validator');
 const validate = require('../middlewares/validate');
 const { param } = require('express-validator');
 const { handleParameterErrors } = require('../middlewares/errors.js');
+const addParams = require('../middlewares/params.js');
 
 const gradeIdValidation = [
   param('gradeId').isInt({ min: 1 }),
@@ -14,6 +15,7 @@ const gradeIdValidation = [
 router.post(
   '/',
   auth(['TEACHER', 'ADMIN']),
+  addParams,
   validate(schema.createGrade),
   grades.createOne
 );

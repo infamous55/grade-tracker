@@ -5,6 +5,7 @@ const schema = require('../validators/semesters.validator');
 const validate = require('../middlewares/validate');
 const { param } = require('express-validator');
 const { handleParameterErrors } = require('../middlewares/errors.js');
+const addParams = require('../middlewares/params.js');
 
 const semesterIdValidation = [
   param('semesterId').isInt({ min: 1 }),
@@ -14,6 +15,7 @@ const semesterIdValidation = [
 router.post(
   '/',
   auth('ADMIN'),
+  addParams,
   validate(schema.createSemester),
   semesters.createOne
 );
