@@ -19,7 +19,7 @@ The project was built using the following technologies:
 
 ![erd](./images/erd.jpg)
 
-The email and password of the default administrator account are **admin@admin.com** and **admin**.
+The email and password of the default administrator account are **admin<span></span>@admin.com** and **admin**.
 
 ## Routes
 
@@ -40,3 +40,5 @@ cd school api && npm install
 sudo docker-compose up
 npm run start
 ```
+
+Access at http://localhost:5000.
