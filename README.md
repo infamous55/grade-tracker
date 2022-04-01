@@ -30,16 +30,16 @@ The application uses JWT for authentication and authorization. The token should 
 - `POST /auth/login` authenticates an user.
 - `POST /auth/refresh` returns a new access token.
 
-Administrators can perform CRUD operations on users at `/users`.
+Administrators can create, update, and delete users at `/users`.
 
-Routes ending in `/me` are for the current user.
+Routes ending in `/me` are for the logged in user.
 
 - `GET /me` returns the current user.
 - `PUT /me` updates the current user.
 
 Years, semesters, classes, and disciplines are managed by administrators at `/years`, `/semesters`, `/classes`, and `/disciplines` respectively.
 
-Teachers and administrators can perform CRUD operations on grades at `/grades`.
+Teachers and administrators can create, update, and delete grades at `/grades`. A student can only see their own grades.
 
 Nested routes allow for filtering and complete resource management for the following:
 
@@ -51,11 +51,19 @@ Nested routes allow for filtering and complete resource management for the follo
 
 Sorting and pagination are supported for all requests of type `GET /resource`.
 
-## Running the application
+## Running locally
+
+First, you need to clone the repository.
 
 ```bash
-git clone https://github.com/infamous55/school-api.git
-cd school-api
+git clone https://github.com/infamous55/school-api.git && cd school-api
+```
+
+Then, you need to modify the `.env` file to match your environment.
+
+Build the image with docker, and run the application.
+
+```bash
 sudo docker-compose build && sudo docker-compose up -d
 ```
 
