@@ -2,6 +2,7 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 const bcrypt = require('bcryptjs');
+require('dotenv').config();
 
 const data = {
   disciplines: [
@@ -63,19 +64,7 @@ const data = {
   ],
 };
 
-async function main() {
-  const hashedPassword = await bcrypt.hash('password', 8);
-  await prisma.user.upsert({
-    where: { email: 'admin@admin.com' },
-    update: {},
-    create: {
-      email: 'admin@admin.com',
-      name: 'admin',
-      password: hashedPassword,
-      role: 'ADMIN',
-    },
-  });
-
+async function insertTestData() {
   for (const discipline of data.disciplines) {
     await prisma.discipline.upsert({
       where: { name: discipline.name },
@@ -122,6 +111,24 @@ async function main() {
       update: {},
       create: { ...group },
     });
+  }
+}
+
+async function main() {
+  const hashedPassword = await bcrypt.hash('password', 8);
+  await prisma.user.upsert({
+    where: { email: 'admin@admin.com' },
+    update: {},
+    create: {
+      email: 'admin@admin.com',
+      name: 'admin',
+      password: hashedPassword,
+      role: 'ADMIN',
+    },
+  });
+
+  if (process.env.NODE_ENV === 'development') {
+    await insertTestData();
   }
 }
 
