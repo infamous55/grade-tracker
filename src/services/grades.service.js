@@ -2,6 +2,7 @@ const createError = require('http-errors');
 const { PrismaClientKnownRequestError } = require('@prisma/client/runtime');
 
 const prisma = require('../utils/prisma');
+const mail = require('../utils/mail');
 
 class gradesService {
   static async createOne({ data }) {
@@ -24,6 +25,13 @@ class gradesService {
           },
         },
       });
+
+      await mail(
+        student.email,
+        'New Grade',
+        `Hi ${student.name}, you got a(n) ${grade.value} in ${grade.discipline.name}!`
+      );
+
       return grade;
     } catch (e) {
       if (createError.isHttpError(e)) throw e;
@@ -54,7 +62,7 @@ class gradesService {
           },
         },
         where: {
-          studentId: data.userId,
+          studentId: data.studentId,
           semesterId: data.semesterId,
           disciplineId: data.disciplineId,
         },

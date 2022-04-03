@@ -19,18 +19,18 @@ class gradeController {
     try {
       const options = getOptions(req);
 
-      let userId;
-      if (req.user.role === 'STUDENT' && !req.params.userId)
-        userId = req.user.id;
+      let studentId;
+      if (req.user.role === 'STUDENT' && !req.params.studentId)
+        studentId = req.user.id;
       else if (
         req.user.role === 'STUDENT' &&
-        parseInt(req.params.userId) !== req.user.id
+        parseInt(req.params.studentId) !== req.user.id
       )
         throw createError.Forbidden('Missing Permissions');
       else
-        req.params.userId
-          ? (userId = parseInt(req.params.userId))
-          : (userId = undefined);
+        req.params.studentId
+          ? (studentId = parseInt(req.params.studentId))
+          : (studentId = undefined);
 
       let semesterId;
       if (req.params.semesterId) semesterId = parseInt(req.params.semesterId);
@@ -41,7 +41,7 @@ class gradeController {
 
       const grades = await service.getAll({
         options,
-        data: { userId, semesterId, disciplineId },
+        data: { studentId, semesterId, disciplineId },
       });
 
       res.status(200).json(grades);
@@ -59,8 +59,8 @@ class gradeController {
         throw createError.Forbidden('Missing Permissions');
 
       if (
-        (req.params.userId &&
-          parseInt(req.params.userId) !== grade.studentId) ||
+        (req.params.studentId &&
+          parseInt(req.params.studentId) !== grade.studentId) ||
         (req.params.semesterId &&
           parseInt(req.params.semesterId) !== grade.semesterId) ||
         (req.params.disciplineId &&
@@ -82,7 +82,8 @@ class gradeController {
       grade = await service.getOne({ data: { gradeId } });
 
       if (
-        (req.params.userId && parseInt(req.params.userId) != grade.studentId) ||
+        (req.params.studentId &&
+          parseInt(req.params.studentId) != grade.studentId) ||
         (req.params.semesterId &&
           parseInt(req.params.semesterId) !== grade.semesterId) ||
         (req.params.disciplineId &&
@@ -106,7 +107,8 @@ class gradeController {
 
       const grade = await service.getOne({ data: { gradeId } });
       if (
-        (req.params.userId && parseInt(req.params.userId) != grade.studentId) ||
+        (req.params.studentId &&
+          parseInt(req.params.studentId) != grade.studentId) ||
         (req.params.semesterId &&
           parseInt(req.params.semesterId) !== grade.semesterId) ||
         (req.params.disciplineId &&

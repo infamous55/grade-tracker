@@ -61,7 +61,7 @@ git clone https://github.com/infamous55/school-api.git && cd school-api
 
 Then, you need to modify the `.env` file to match your environment.
 
-Build the image with docker, and run the application.
+Build the images with docker-compose, and run the application.
 
 ```bash
 sudo docker-compose build && sudo docker-compose up -d

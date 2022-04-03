@@ -3,6 +3,7 @@ const createError = require('http-errors');
 const { PrismaClientKnownRequestError } = require('@prisma/client/runtime');
 
 const prisma = require('../utils/prisma');
+const mail = require('../utils/mail');
 
 class usersService {
   static async createOne({ data }) {
@@ -115,6 +116,12 @@ class usersService {
         where: { id: userId },
         data,
       });
+
+      await mail(
+        user.email,
+        'Account Updated',
+        `Hi ${user.name}, your account information has been updated!`
+      );
 
       return user;
     } catch (e) {

@@ -12,6 +12,11 @@ const userIdValidation = [
   handleParameterErrors(),
 ];
 
+const studentIdValidation = [
+  param('studentId').isInt({ min: 1 }),
+  handleParameterErrors(),
+];
+
 router.post(
   '/',
   auth('ADMIN'),
@@ -36,6 +41,6 @@ router.put(
   users.updateOne
 );
 router.delete('/:userId', auth('ADMIN'), userIdValidation, users.deleteOne);
-router.use('/:userId/grades', userIdValidation, require('./grades'));
+router.use('/:studentId/grades', studentIdValidation, require('./grades'));
 
 module.exports = router;

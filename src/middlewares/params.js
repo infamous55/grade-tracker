@@ -1,6 +1,7 @@
 const addParams = (req, res, next) => {
   const parameters = [
     'userId',
+    'studentId',
     'semesterId',
     'disciplineId',
     'classId',
