@@ -3,12 +3,19 @@ const createError = require('http-errors');
 const { PrismaClientKnownRequestError } = require('@prisma/client/runtime');
 
 const prisma = require('../utils/prisma');
-const mail = require('../utils/mail');
+const { mail, verify } = require('../utils/mail');
 
 class usersService {
   static async createOne({ data }) {
     try {
       data.password = await bcrypt.hash(data.password, 8);
+
+      if (process.env.NODE_ENV === 'production') {
+        const { verdict } = await verify(data.email);
+        if (verdict.status !== 'valid')
+          throw createError.BadRequest('Invalid Email');
+      }
+
       const user = await prisma.user.create({
         data,
         select: {
@@ -99,6 +106,13 @@ class usersService {
       delete data.userId;
 
       if (data.password) data.password = await bcrypt.hash(data.password, 8);
+
+      if (data.email && process.env.NODE_ENV === 'production') {
+        const { verdict } = await verify(data.email);
+        if (verdict.status !== 'valid')
+          throw createError.BadRequest('Invalid Email');
+      }
+
       const user = await prisma.user.update({
         select: {
           id: true,
