@@ -1,6 +1,6 @@
-# School API
+# Grade Tracker
 
-This is a REST API for a virtual scholar grades catalog.
+This is a REST API for a student grade tracker.
 
 ## Overview
 
@@ -50,6 +50,8 @@ Nested routes allow for filtering and complete resource management for the follo
 - `/years/:yearId/semesters`
 
 Sorting and pagination are supported for all requests of type `GET /resource`.
+
+Emails are verified using SendGrid.
 
 ## Running locally
 
